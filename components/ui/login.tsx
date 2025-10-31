@@ -3,10 +3,18 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import React from "react";
+import { signInWithPopup } from "firebase/auth";
+import { auth, provider } from "../../firebase";
 
 export default function LoginPage() {
-    const handleGoogleSignIn = () => {
-        console.log("Sign in with Google");
+    const handleGoogleSignIn = async () => {
+        try {
+            const result = await signInWithPopup(auth, provider);
+            console.log(result.user.displayName);
+
+        } catch (error) {
+            console.error("Google sign-in error:", error);
+        }
     };
 
     return (
