@@ -8,15 +8,34 @@ import { auth, provider } from "../../firebase";
 import { useAuth } from "../../providers/AuthProvider";
 import { useRouter } from "next/navigation";
 
-export default function LoginPage() {
+interface LoginPageProps {
+  userType: string;
+}
+
+export default function LoginPage({ userType }: LoginPageProps) {
     const { user, loading } = useAuth();
     const router = useRouter();
 
+    let title = "Welcome Back";
+    let description = "Sign in to access your dashboard.";
+    const buttonText = "Sign in with Google";
+    let redirectPath = "/dashboard/m";
+
+    if (userType === "club") {
+        title = "Club Login";
+        description = "Sign in as a club representative.";
+        redirectPath = "/dashboard/c"; 
+    } else if (userType === "superadmin") {
+        title = "Super Admin Login";
+        description = "Sign in as super admin.";
+        redirectPath = "/dashboard/sa";
+    }
+
     useEffect(() => {
         if (!loading && user) {
-            router.push('/dashboard/m');
+            router.push(redirectPath);
         }
-    }, [loading, user, router]);
+    }, [loading, user, router, redirectPath]);
 
     const handleGoogleSignIn = async () => {
         try {
@@ -52,10 +71,10 @@ export default function LoginPage() {
                     className="w-full max-w-md text-center"
                 >
                     <h2 className="mb-8 text-4xl font-extrabold tracking-tighter">
-                        Welcome Back
+                        {title}
                     </h2>
                     <p className="mb-8 text-lg text-gray-600">
-                        Sign in to access your dashboard.
+                        {description}
                     </p>
                     <motion.button
                         whileHover={{ scale: 1.05 }}
@@ -85,7 +104,7 @@ export default function LoginPage() {
                                 d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
                             />
                         </svg>
-                        Sign in with Google
+                        {buttonText}
                     </motion.button>
                 </motion.div>
             </main>

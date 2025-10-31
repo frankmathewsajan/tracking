@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { Settings, LogOut } from "lucide-react";
+import { LogOut } from "lucide-react";
 import Link from "next/link";
 import React, { useState } from "react";
 import { signOut } from "firebase/auth";
@@ -56,31 +56,8 @@ const DashboardNavbar: React.FC<DashboardNavbarProps> = ({ user }) => {
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              className="absolute top-full mt-2 right-0 bg-white border border-gray-200 rounded-lg shadow-lg p-4 min-w-[200px]"
+              className="absolute top-full mt-2 right-0 bg-white border border-gray-200 rounded-lg shadow-lg min-w-[150px]"
             >
-              <div className="flex items-center gap-3 mb-3">
-                <Image
-                  src={user?.photoURL || 'https://avatar.iran.liara.run/public'}
-                  alt="Profile"
-                  width={32}
-                  height={32}
-                  className="w-8 h-8 rounded-full"
-                />
-                <div>
-                  <p className="font-medium text-sm">{user?.displayName}</p>
-                  <p className="text-xs text-gray-500">{user?.email}</p>
-                </div>
-              </div>
-              <button
-                className="flex items-center gap-2 w-full text-left py-2 px-4 hover:bg-gray-100 rounded"
-                onClick={() => {
-                  console.log("Settings clicked");
-                  setIsDropdownOpen(false);
-                }}
-              >
-                <Settings size={16} />
-                Settings
-              </button>
               <button
                 className="flex items-center gap-2 w-full text-left py-2 px-4 hover:bg-gray-100 rounded text-red-600"
                 onClick={() => {

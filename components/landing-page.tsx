@@ -56,25 +56,30 @@ export default function LandingPage() {
                     Member
                   </button>
                 </Link>
-                <button
-                  className="block w-full text-left py-2 px-4 hover:bg-gray-100 rounded"
-                  onClick={() => {
-                    console.log("Sign in as Club Admin");
-                    setIsDropdownOpen(false);
-                  }}
-                >
-                    Club Admin
-                </button>
 
-                <button
-                  className="block w-full text-left py-2 px-4 hover:bg-gray-100 rounded"
-                  onClick={() => {
-                    console.log("Sign in as Club Admin");
-                    setIsDropdownOpen(false);
-                  }}
-                >
-                    Super Admin
-                </button>
+                <Link href={'/login/c'}>
+                  <button
+                    className="block w-full text-left py-2 px-4 hover:bg-gray-100 rounded"
+                    onClick={() => {
+                      console.log("Sign in as Club Admin");
+                      setIsDropdownOpen(false);
+                    }}
+                  >
+                      Club Admin
+                  </button>
+                </Link>
+
+                <Link href={'/login/sa'}>
+                  <button
+                    className="block w-full text-left py-2 px-4 hover:bg-gray-100 rounded"
+                    onClick={() => {
+                      console.log("Sign in as Club Admin");
+                      setIsDropdownOpen(false);
+                    }}
+                  >
+                      Super Admin
+                  </button>
+                </Link>
               </motion.div>
             )}
           </AnimatePresence>
