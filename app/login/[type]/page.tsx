@@ -1,4 +1,4 @@
-import LoginPage from '@/components/ui/login'
+import LoginPage from '@/components/common/login'
 
 export default async function Page({
   params,

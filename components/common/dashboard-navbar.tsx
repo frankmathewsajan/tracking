@@ -28,7 +28,7 @@ const DashboardNavbar: React.FC<DashboardNavbarProps> = ({ user }) => {
   };
 
   return (
-    <header className="fixed top-0 left-0 z-50 flex w-full items-center justify-between p-4 md:p-8 bg-white border-b border-gray-200">
+    <header className="sticky top-0 left-0 flex w-full items-center justify-between p-4 md:p-8 bg-white border-b border-gray-200">
       <Link href="/">
         <h1 className="text-2xl font-bold tracking-tighter">
           Club<span className="text-indigo-600">Sync</span>

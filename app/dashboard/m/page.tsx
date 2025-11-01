@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useAuth } from "../../../providers/AuthProvider";
-import DashboardNavbar from "@/components/ui/dashboard-navbar";
+import DashboardNavbar from "@/components/common/dashboard-navbar";
 
 const MemberDashboardPage = () => {
   const { user } = useAuth();
