@@ -36,7 +36,7 @@ const Page = () => {
 
   const fetchClubs = async () => {
     try {
-      const response = await fetch('/api/clubs/get-clubs');
+      const response = await fetch('/api/superadmin/clubs/get-clubs');
       if (!response.ok) throw new Error('Failed to fetch clubs');
       const data: Club[] = await response.json();
       setClubs(data);
@@ -59,7 +59,7 @@ const Page = () => {
         adminIds: formData.adminIds.split(',').map(a => a.trim()),
         memberIds: formData.memberIds.split(',').map(m => m.trim()),
       };
-      const response = await fetch('/api/clubs/create-club', {
+      const response = await fetch('/api/superadmin/clubs/create-club', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -87,7 +87,7 @@ const Page = () => {
         adminIds: formData.adminIds.split(',').map(a => a.trim()),
         memberIds: formData.memberIds.split(',').map(m => m.trim()),
       };
-      const response = await fetch('/api/clubs/modify-club', {
+      const response = await fetch('/api/superadmin/clubs/modify-club', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -124,7 +124,7 @@ const Page = () => {
   const confirmDelete = async () => {
     if (!deletingClubId) return;
     try {
-      const response = await fetch('/api/clubs/delete-club', {
+      const response = await fetch('/api/superadmin/clubs/delete-club', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id: deletingClubId }),
