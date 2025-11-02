@@ -104,16 +104,6 @@ const ClubDashboardPage = () => {
                           {club.adminIds.map(admin => <p key={admin} className="truncate">{admin}</p>)}
                         </div>
                       </div>
-
-                      <div>
-                        <h3 className="font-semibold text-gray-700 mb-3 flex items-center gap-2">
-                          <Users className="h-5 w-5 text-indigo-500" />
-                          Members ({club.memberIds.length})
-                        </h3>
-                        <div className="space-y-1.5 text-sm text-gray-600 max-h-24 overflow-y-auto pr-2">
-                          {club.memberIds.map(member => <p key={member} className="truncate">{member}</p>)}
-                        </div>
-                      </div>
                     </div>
 
                     <div className="bg-gray-50 rounded-b-xl mt-auto px-6 py-3 border-t border-gray-200 flex items-center gap-2 text-sm text-gray-500">

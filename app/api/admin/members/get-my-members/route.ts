@@ -20,7 +20,6 @@ export async function GET(request: NextRequest) {
 
     const userDocRef = dbAdmin.collection('users').doc(userId);
     const userDocSnap = await userDocRef.get();
-
     if (!userDocSnap.exists) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
@@ -40,6 +39,10 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Club not found' }, { status: 404 });
     }
     const clubData = clubDocSnap.data();
+    const adminIds = clubData?.adminIds || [];
+    if (!adminIds.includes(decodedToken.email)) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    }
     const memberIds = clubData?.memberIds || [];
 
     const users = await Promise.all(memberIds.map(async (memberId: string) => {

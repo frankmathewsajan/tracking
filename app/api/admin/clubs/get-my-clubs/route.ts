@@ -35,10 +35,15 @@ export async function GET(request: NextRequest) {
 
     const clubs = clubDocs
       .filter(docSnap => docSnap.exists)
-      .map(docSnap => ({
-        id: docSnap.id,
-        ...(docSnap.data() as Record<string, unknown>),
-      }));
+      .map(docSnap => {
+        const data = docSnap.data();
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
+        const { memberIds, ...clubData } = data as any;
+        return {
+          id: docSnap.id,
+          ...clubData,
+        };
+      });
 
     return NextResponse.json(clubs, { status: 200 });
 
