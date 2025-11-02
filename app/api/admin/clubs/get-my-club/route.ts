@@ -27,9 +27,10 @@ export async function GET(request: NextRequest) {
 
     const userData = userDocSnap.data();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const clubIds = (userData as any)?.clubIds as string[] | undefined;
+    const clubIds = (userData as any)?.clubIds as any[] | undefined;
 
-    if (!clubIds || !clubIds.includes(clubId)) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if (!clubIds || !clubIds.some((c: any) => c.clubId === clubId)) {
       return NextResponse.json({ error: 'Access denied: You are not a member of this club' }, { status: 403 });
     }
 

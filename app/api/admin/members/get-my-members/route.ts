@@ -27,22 +27,39 @@ export async function GET(request: NextRequest) {
 
     const userData = userDocSnap.data();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const clubIds = (userData as any)?.clubIds as string[] | undefined;
+    const clubIds = (userData as any)?.clubIds as any[] | undefined;
 
-    if (!clubIds || !clubIds.includes(clubId)) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if (!clubIds || !clubIds.some((c: any) => c.clubId === clubId)) {
       return NextResponse.json({ error: 'Access denied: You are not a member of this club' }, { status: 403 });
     }
 
-    const usersRef = dbAdmin.collection('users');
-    const usersQuery = usersRef.where('clubIds', 'array-contains', clubId);
-    const querySnapshot = await usersQuery.get();
+    const clubDocRef = dbAdmin.collection('clubs').doc(clubId);
+    const clubDocSnap = await clubDocRef.get();
+    if (!clubDocSnap.exists) {
+      return NextResponse.json({ error: 'Club not found' }, { status: 404 });
+    }
+    const clubData = clubDocSnap.data();
+    const memberIds = clubData?.memberIds || [];
 
-    const users = querySnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data(),
+    const users = await Promise.all(memberIds.map(async (memberId: string) => {
+      const userDoc = await dbAdmin.collection('users').doc(memberId).get();
+      if (userDoc.exists) {
+        const userData = userDoc.data();
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const clubEntry = (userData?.clubIds as any[])?.find((c: any) => c.clubId === clubId);
+        return {
+          id: userDoc.id,
+          ...userData,
+          department: clubEntry?.department || null,
+        };
+      }
+      return null;
     }));
 
-    return NextResponse.json(users, { status: 200 });
+    const filteredUsers = users.filter(u => u !== null);
+
+    return NextResponse.json(filteredUsers, { status: 200 });
 
   } catch (error) {
     console.error("Error fetching club members:", error);

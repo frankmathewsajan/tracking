@@ -20,14 +20,17 @@ export async function GET(request: NextRequest) {
 
     const userData = userDocSnap.data();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const clubIds = (userData as any)?.clubIds as string[] | undefined;
+    const clubIds = (userData as any)?.clubIds as any[] | undefined;
 
     if (!clubIds || clubIds.length === 0) {
       return NextResponse.json([], { status: 200 });
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const clubIdsArray = clubIds.map((c: any) => c.clubId);
+
     const clubDocs = await Promise.all(
-      clubIds.map(id => dbAdmin.collection('clubs').doc(id).get())
+      clubIdsArray.map(id => dbAdmin.collection('clubs').doc(id).get())
     );
 
     const clubs = clubDocs

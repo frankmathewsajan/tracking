@@ -11,7 +11,6 @@ export async function GET(request: NextRequest) {
     const decodedToken = await authAdmin.verifySessionCookie(sessionCookie, true);
     const userId = decodedToken.uid;
 
-
     const userDocRef = dbAdmin.collection('users').doc(userId);
     const userDocSnap = await userDocRef.get();
 
@@ -23,21 +22,24 @@ export async function GET(request: NextRequest) {
     console.log("Decoded user ID:", userData);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const clubIds = (userData as any)?.clubIds as string[] | undefined;
+    const clubIds = (userData as any)?.clubIds as any[] | undefined;
 
     if (!clubIds || clubIds.length === 0) {
       return NextResponse.json([], { status: 200 });
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const clubIdsArray = clubIds.map((c: any) => c.clubId);
+
     const clubDocs = await Promise.all(
-      clubIds.map(id => dbAdmin.collection('clubs').doc(id).get())
+      clubIdsArray.map(id => dbAdmin.collection('clubs').doc(id).get())
     );
 
-    const clubIdsArray = clubDocs
+    const filteredClubIds = clubDocs
       .filter(docSnap => docSnap.exists)
       .map(docSnap => docSnap.id);
 
-    return NextResponse.json(clubIdsArray, { status: 200 });
+    return NextResponse.json(filteredClubIds, { status: 200 });
 
   } catch (error) {
     console.error("Error fetching user's clubs:", error);
