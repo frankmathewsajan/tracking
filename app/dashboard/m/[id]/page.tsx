@@ -197,7 +197,6 @@ const TaskModal = ({
                 <form onSubmit={handleSubmit} className="space-y-4">
                     {!isEditing && (
                         <>
-                            {/* Title */}
                             <div>
                                 <label
                                     htmlFor="title"
@@ -215,7 +214,6 @@ const TaskModal = ({
                                 />
                             </div>
 
-                            {/* Description */}
                             <div>
                                 <label
                                     htmlFor="description"
@@ -232,7 +230,6 @@ const TaskModal = ({
                                 />
                             </div>
 
-                            {/* Row for Date and Type */}
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
                                     <label
@@ -484,7 +481,6 @@ export default function Page() {
         taskData: Omit<Task, "id" | "createdAt" | "department"> & { id?: string }
     ) => {
         if (taskData.id) {
-            // Update existing task (only progress for editing)
             try {
                 const res = await fetch('/api/user/tasks/update-progress', {
                     method: 'POST',
@@ -632,7 +628,6 @@ export default function Page() {
                 </main>
             </div>
 
-            {/* Floating Action Button for Add New Task */}
             <button
                 onClick={() => handleOpenModal(null)}
                 className="fixed bottom-6 right-6 w-14 h-14 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full shadow-lg hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 flex items-center justify-center z-50"
