@@ -38,7 +38,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    
     const memberIds = clubData?.memberIds || [];
     if (!memberIds.includes(userId)) {
       await clubDocRef.update({
@@ -48,7 +47,7 @@ export async function POST(request: NextRequest) {
 
     if (role === 'admin') {
       const adminIds = clubData?.adminIds || [];
-      if (!adminIds.includes(userId)) {
+      if (!adminIds.includes(email)) {
         await clubDocRef.update({
           adminIds: [...adminIds, email]
         });
@@ -65,6 +64,18 @@ export async function POST(request: NextRequest) {
       if (!clubIds.some((c: any) => c.clubId === clubId)) {
         await userDocRef.update({
           clubIds: [...clubIds, { clubId, department }]
+        });
+      }
+
+      // Update role
+      const currentRole = userData?.role;
+      if (role === 'admin' && currentRole !== 'super_admin') {
+        await userDocRef.update({
+          role: 'admin'
+        });
+      } else if (role === 'member' && currentRole !== 'super_admin') {
+        await userDocRef.update({
+          role: 'member'
         });
       }
     }
