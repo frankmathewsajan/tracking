@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation';
 
 interface User {
+  createdAt: { _seconds: number; _nanoseconds: number; } | undefined;
   id: string;
   email: string;
   role?: string;
@@ -210,7 +211,13 @@ export default function Page() {
                         </div>
                         <div className="space-y-1 text-xs text-gray-600">
                           <p><span className="font-medium">Role:</span> {mem.role || 'Member'}</p>
-                          <p><span className="font-medium">Joined:</span> {mem.joinedAt ? new Date(mem.joinedAt._seconds * 1000).toLocaleDateString() : 'Unknown'}</p>
+                          <p><span className="font-medium">Joined:</span> {(() => {
+                            const date = mem.joinedAt || mem.createdAt;
+                            if (date && date._seconds) {
+                              return new Date(date._seconds * 1000).toLocaleDateString('en-GB');
+                            }
+                            return 'Unknown';
+                          })()}</p>
                         </div>
                       </div>
                     </Link>

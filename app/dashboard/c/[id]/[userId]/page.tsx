@@ -90,7 +90,7 @@ const EditDueDateModal = ({
 
     return (
         <div className="fixed inset-0 flex items-center justify-center z-50" style={{ backgroundColor: 'rgba(0,0,0,0.6)' }}>
-            <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md mx-4">
                 <div className="flex justify-between items-center mb-4">
                     <h3 className="text-lg font-semibold">Edit Due Date</h3>
                     <button onClick={onClose} className="text-gray-500 hover:text-gray-700" disabled={isLoading}>
@@ -109,7 +109,7 @@ const EditDueDateModal = ({
                             disabled={isLoading}
                         />
                     </div>
-                    <div className="flex justify-end gap-2">
+                    <div className="flex flex-col sm:flex-row justify-end gap-2">
                         <button
                             type="button"
                             onClick={onClose}
@@ -133,9 +133,7 @@ const EditDueDateModal = ({
     );
 };
 
-/**
- * Task Card Component
- */
+
 const TaskCard = ({
     task,
     onEditDueDate,
@@ -148,9 +146,9 @@ const TaskCard = ({
     const isOverdue = new Date(task.dueDate._seconds * 1000) < new Date() && task.status < 100;
 
     return (
-        <div className="bg-white p-5 rounded-lg shadow-md border border-gray-100 hover:shadow-lg transition-shadow duration-300">
-            <div className="flex justify-between items-start mb-3">
-                <h3 className="text-lg font-semibold text-gray-800">{task.title}</h3>
+        <div className="bg-white p-4 sm:p-5 rounded-lg shadow-md border border-gray-100 hover:shadow-lg transition-shadow duration-300">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-3">
+                <h3 className="text-lg font-semibold text-gray-800 mb-2 sm:mb-0">{task.title}</h3>
                 <div className="flex gap-2">
                     <button
                         onClick={() => onEditDueDate(task.progressId, new Date(task.dueDate._seconds * 1000).toISOString().split('T')[0])}
@@ -181,10 +179,10 @@ const TaskCard = ({
                 <SteppedProgressBar progress={task.status} />
             </div>
 
-            <div className="flex items-center justify-between text-sm">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between text-sm">
                 <div
                     className={`flex items-center gap-1.5 ${isOverdue ? "text-red-600 font-medium" : "text-gray-500"
-                        }`}
+                        } mb-2 sm:mb-0`}
                 >
                     <CalendarDays size={16} />
                     <span>
@@ -229,7 +227,7 @@ const AddTaskModal = ({
 
     return (
         <div className="fixed inset-0 flex items-center justify-center z-50" style={{ backgroundColor: 'rgba(0,0,0,0.7)' }}>
-            <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md mx-4">
                 <div className="flex justify-between items-center mb-4">
                     <h3 className="text-lg font-semibold">Add New Task</h3>
                     <button onClick={onClose} className="text-gray-500 hover:text-gray-700" disabled={isLoading}>
@@ -270,7 +268,7 @@ const AddTaskModal = ({
                             disabled={isLoading}
                         />
                     </div>
-                    <div className="flex justify-end gap-2">
+                    <div className="flex flex-col sm:flex-row justify-end gap-2">
                         <button
                             type="button"
                             onClick={onClose}
@@ -294,7 +292,6 @@ const AddTaskModal = ({
     );
 };
 
-
 const RemoveMemberModal = ({
     isOpen,
     onClose,
@@ -310,7 +307,7 @@ const RemoveMemberModal = ({
 
     return (
         <div className="fixed inset-0 flex items-center justify-center z-50" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
-            <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md mx-4">
                 <div className="flex justify-between items-center mb-4">
                     <h3 className="text-lg font-semibold">Remove Member</h3>
                     <button onClick={onClose} className="text-gray-500 hover:text-gray-700" disabled={isLoading}>
@@ -320,7 +317,7 @@ const RemoveMemberModal = ({
                 <p className="text-gray-700 mb-6">
                     Are you sure you want to remove this member from the club? This action cannot be undone.
                 </p>
-                <div className="flex justify-end gap-2">
+                <div className="flex flex-col sm:flex-row justify-end gap-2">
                     <button
                         onClick={onClose}
                         className="px-4 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50"
@@ -357,7 +354,7 @@ const DeleteTaskModal = ({
 
     return (
         <div className="fixed inset-0 flex items-center justify-center z-50" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
-            <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md mx-4">
                 <div className="flex justify-between items-center mb-4">
                     <h3 className="text-lg font-semibold">Delete Task</h3>
                     <button onClick={onClose} className="text-gray-500 hover:text-gray-700" disabled={isLoading}>
@@ -367,7 +364,7 @@ const DeleteTaskModal = ({
                 <p className="text-gray-700 mb-6">
                     Are you sure you want to delete this task? This action cannot be undone.
                 </p>
-                <div className="flex justify-end gap-2">
+                <div className="flex flex-col sm:flex-row justify-end gap-2">
                     <button
                         onClick={onClose}
                         className="px-4 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50"
@@ -404,6 +401,7 @@ export default function Page() {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [deletingTaskId, setDeletingTaskId] = useState<string | null>(null);
 
+    // Loading states for actions
     const [isAddingTask, setIsAddingTask] = useState(false);
     const [isUpdatingDueDate, setIsUpdatingDueDate] = useState(false);
     const [isRemovingMember, setIsRemovingMember] = useState(false);
@@ -629,9 +627,9 @@ export default function Page() {
             <DashboardNavbar user={user} />
             <div className="max-w-7xl mx-auto space-y-6 p-4">
                 {/* User Info Section */}
-                <section className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-4">
+                <section className="bg-white p-4 sm:p-6 rounded-lg shadow-sm border border-gray-100">
+                    <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                             {data.photoURL ? (
                                 <Image
                                     src={data.photoURL}
@@ -646,9 +644,9 @@ export default function Page() {
                                 </div>
                             )}
                             <div>
-                                <h1 className="text-2xl font-bold text-gray-800">{data.name}</h1>
+                                <h1 className="text-xl sm:text-2xl font-bold text-gray-800">{data.name}</h1>
                                 <p className="text-gray-600">{data.email}</p>
-                                <div className="flex gap-4 mt-2">
+                                <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 mt-2">
                                     <span className="text-sm text-gray-500">
                                         Department: 
                                         {isEditingDepartment ? (
@@ -675,7 +673,7 @@ export default function Page() {
                                                 Edit
                                             </button>
                                         ) : (
-                                            <div className="ml-2 flex gap-2">
+                                            <div className="ml-2 flex flex-col sm:flex-row gap-1 sm:gap-2">
                                                 <button
                                                     onClick={handleUpdateDepartment}
                                                     className="text-green-500 hover:text-green-700 text-sm flex items-center gap-1"
@@ -705,7 +703,7 @@ export default function Page() {
                         </div>
                         <button
                             onClick={() => setIsRemoveModalOpen(true)}
-                            className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 hover:cursor-pointer"
+                            className="flex items-center justify-center gap-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 hover:cursor-pointer w-full sm:w-auto"
                         >
                             <Trash size={16} />
                             Remove Member
@@ -717,16 +715,16 @@ export default function Page() {
                 <main className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     {/* Club Tasks */}
                     <section className="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
-                        <div className="flex items-center justify-between mb-4">
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-2">
                             <div className="flex items-center gap-3">
                                 <ClipboardCheck className="text-blue-600" size={24} />
-                                <h2 className="text-xl font-semibold text-gray-800">
+                                <h2 className="text-lg sm:text-xl font-semibold text-gray-800">
                                     Club Tasks ({data.progress.filter(t => t.givenBy === "club").length})
                                 </h2>
                             </div>
                             <button
                                 onClick={() => setIsModalOpen(true)}
-                                className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 hover:cursor-pointer"
+                                className="flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 hover:cursor-pointer w-full sm:w-auto"
                             >
                                 <Plus size={16} />
                                 Add Task
@@ -754,7 +752,7 @@ export default function Page() {
                     <section className="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
                         <div className="flex items-center gap-3 mb-4">
                             <User className="text-green-600" size={24} />
-                            <h2 className="text-xl font-semibold text-gray-800">
+                            <h2 className="text-lg sm:text-xl font-semibold text-gray-800">
                                 Personal Tasks ({data.progress.filter(t => t.givenBy === "personal").length})
                             </h2>
                         </div>
