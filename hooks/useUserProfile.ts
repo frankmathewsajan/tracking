@@ -14,6 +14,8 @@ export interface UserProfile {
   photoURL?: string;
   createdAt: any;
   rating?: "Pawn" | "Knight" | "Rook";
+  points?: number;
+  lastDailyClaimAt?: any;
 }
 
 export function useUserProfile() {

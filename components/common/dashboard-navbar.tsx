@@ -23,6 +23,7 @@ const DashboardNavbar: React.FC<DashboardNavbarProps> = ({ user, backHref }) => 
   const { profile, loading } = useUserProfile();
   
   const rating = profile?.rating || "Pawn";
+  const points = profile?.points ?? 0;
   const ratingIcon = rating === "Rook" ? <FaChessRook className="text-amber-500" /> : rating === "Knight" ? <FaChessKnight className="text-[#b023a7]" /> : <FaChessPawn className="text-slate-500" />;
   const ratingText = rating === "Rook" ? "text-amber-700" : rating === "Knight" ? "text-[#b023a7]" : "text-slate-600";
   const isKnight = rating === "Knight";
@@ -77,6 +78,9 @@ const DashboardNavbar: React.FC<DashboardNavbarProps> = ({ user, backHref }) => 
             <span className={`flex items-center gap-1 rounded-full bg-white/70 px-2 py-0.5 text-xs font-semibold shadow-inner ${ratingText}`}>
               {ratingIcon}
               {rating}
+            </span>
+            <span className="flex items-center gap-1 rounded-full bg-gray-100 px-2 py-0.5 text-[11px] font-semibold text-gray-700 shadow-inner">
+              {points} pts
             </span>
           </span>
         </motion.button>
