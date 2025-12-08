@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/providers/AuthProvider";
 import { useUserProfile } from "@/hooks/useUserProfile";
-import { FaChessPawn, FaChessBishop, FaChessKnight, FaChessRook, FaCrown, FaLock, FaCode, FaRobot, FaGithub, FaCircleCheck, FaServer, FaBrain, FaGitAlt, FaTerminal, FaDocker, FaAws, FaPaperPlane, FaXmark, FaNetworkWired, FaCloud, FaDatabase, FaGlobe } from "react-icons/fa6";
+import { FaChessPawn, FaChessBishop, FaChessKnight, FaChessRook, FaCrown, FaLock, FaCode, FaRobot, FaGithub, FaCircleCheck, FaServer, FaBrain, FaGitAlt, FaTerminal, FaDocker, FaAws, FaPaperPlane, FaXmark, FaNetworkWired, FaCloud, FaDatabase, FaGlobe, FaCalendarCheck } from "react-icons/fa6";
 import { motion, AnimatePresence } from "framer-motion";
 import DashboardNavbar from "@/components/common/dashboard-navbar";
 
@@ -46,8 +46,7 @@ const QUESTS = [
   { id: 'sys-3', title: "Design Twitter", type: 'sys', minRank: 'Knight', pts: 800, desc: "High-level design: Fan-out service & timeline gen.", icon: <FaNetworkWired /> },
   { id: 'sys-4', title: "Distributed Systems", type: 'sys', minRank: 'Rook', pts: 1500, desc: "Implement CAP Theorem logic / Event-Driven Arch.", icon: <FaServer /> },
 
-  // --- CLOUD PATH (ADVANCED: KNIGHT+) ---
-  // No Pawn/Bishop tasks here.
+  // --- CLOUD PATH ---
   { id: 'cloud-1', title: "AWS Core Services", type: 'cloud', minRank: 'Knight', pts: 600, desc: "Deploy a 3-tier app using EC2, RDS, and S3.", icon: <FaAws /> },
   { id: 'cloud-2', title: "Serverless Arch", type: 'cloud', minRank: 'Knight', pts: 700, desc: "Build an API using Lambda, API Gateway & DynamoDB.", icon: <FaCloud /> },
   { id: 'cloud-3', title: "VPC Architect", type: 'cloud', minRank: 'Rook', pts: 1000, desc: "Design Public/Private Subnets, NAT, and Security Groups.", icon: <FaNetworkWired /> },
@@ -63,11 +62,12 @@ export default function RatingPage() {
   const [path, setPath] = useState<'web' | 'ai' | 'ops' | 'sys' | 'cloud'>('web'); 
   const [onlyCurrent, setOnlyCurrent] = useState(false);
 
-  // SUBMISSION STATE
+  // SUBMISSION & CLAIM STATE
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedQuest, setSelectedQuest] = useState<any>(null);
   const [repoLink, setRepoLink] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [claim, setClaim] = useState({ loading: false, msg: "", isErr: false });
 
   // DATA DERIVATION
   const rating = profile?.rating || "Pawn";
@@ -78,6 +78,9 @@ export default function RatingPage() {
   const view = BADGES[heroIdx] || BADGES[0];
   const isUnlocked = heroIdx <= userRankVal;
   
+  // DAILY CLAIM LOGIC
+  const claimedToday = profile?.lastDailyClaimAt?.toDate().toDateString() === new Date().toDateString();
+
   // DYNAMIC GRADIENTS
   let nextGrad = "";
   let barGrad = "";
@@ -128,6 +131,16 @@ export default function RatingPage() {
     setModalOpen(false);
   };
 
+  const handleClaim = async () => {
+    setClaim({ ...claim, loading: true });
+    try {
+      // Assuming API handles +20 pts
+      const res = await fetch("/api/user/points", { method: "POST" });
+      const d = await res.json();
+      setClaim({ loading: false, msg: res.ok ? d.message : d.error, isErr: !res.ok });
+    } catch { setClaim({ loading: false, msg: "Network Error", isErr: true }); }
+  };
+
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900">
       <DashboardNavbar user={user} backHref={back} />
@@ -159,11 +172,29 @@ export default function RatingPage() {
               </div>
             </div>
             
-            {rating !== "Rook" && (
-              <div className={`px-4 py-1.5 rounded-full text-xs font-bold flex items-center gap-2 border shadow-sm ${nextGrad}`}>
-                <FaCrown /> Next: {rating === "Pawn" ? "Bishop" : rating === "Bishop" ? "Knight" : "Rook"}
+            <div className="text-center sm:text-right space-y-3">
+              {/* Daily Claim Button - RESTORED */}
+              <div className="flex flex-col sm:flex-row gap-3 items-center justify-end">
+                 <button 
+                  onClick={handleClaim} 
+                  disabled={claim.loading || claimedToday} 
+                  className={`px-5 py-2 rounded-full border text-sm font-bold flex items-center gap-2 transition-all ${claimedToday ? 'bg-emerald-500/20 border-emerald-500/50 text-emerald-300' : 'bg-white/10 hover:bg-white/20 border-white/20 text-white'}`}
+                 >
+                   {claim.loading ? "..." : claimedToday ? (
+                     <> <FaCircleCheck /> Claimed (+20)</>
+                   ) : (
+                     <> <FaCalendarCheck /> Claim Daily (+20)</>
+                   )}
+                 </button>
+                 
+                 {rating !== "Rook" && (
+                  <div className={`px-4 py-2 rounded-full text-xs font-bold flex items-center gap-2 border shadow-sm ${nextGrad}`}>
+                    <FaCrown /> Next: {rating === "Pawn" ? "Bishop" : rating === "Bishop" ? "Knight" : "Rook"}
+                  </div>
+                )}
               </div>
-            )}
+              {claim.msg && <p className={`text-xs ${claim.isErr ? 'text-rose-300' : 'text-emerald-300'}`}>{claim.msg}</p>}
+            </div>
           </div>
         </motion.div>
 
