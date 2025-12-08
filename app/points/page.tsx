@@ -145,7 +145,7 @@ export default function RatingPage() {
     <div className="min-h-screen bg-slate-50 text-slate-900">
       <DashboardNavbar user={user} backHref={profile?.role === "super_admin" ? "/dashboard/sa" : profile?.role === "admin" ? "/dashboard/c" : "/dashboard/m"} />
       <main className="mx-auto w-full max-w-6xl px-4 py-8 font-serif">
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mb-8 bg-gradient-to-r from-slate-900 to-slate-800 rounded-2xl text-white shadow-xl overflow-hidden border border-slate-700">
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mb-8 bg-linear-to-r from-slate-900 to-slate-800 rounded-2xl text-white shadow-xl overflow-hidden border border-slate-700">
           <div className="flex justify-between px-4 pt-4">
             <button onClick={() => nav(-1)} className="hover:bg-white/10 rounded-full px-3 text-slate-400 hover:text-white">◀</button>
             <button onClick={() => nav(1)} className="hover:bg-white/10 rounded-full px-3 text-slate-400 hover:text-white">▶</button>
